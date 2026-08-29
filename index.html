@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nano Electronics — Redefining Modern Living in Addis Ababa</title>
+<meta name="description" content="Nano Electronics — premier home appliance & electronics showroom at Eliana Mall, Churchill Avenue, Addis Ababa." />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Tailwind (CDN, JIT) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/3.4.10/tailwind.min.js"></script>
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          sapphire: '#0B192C',
+          sapphire2: '#122A47',
+          platinum: '#E2E8F0',
+          glow: '#38BDF8',
+          cloud: '#F8FAFC',
+        },
+        fontFamily: {
+          serif: ['"Playfair Display"', 'serif'],
+          sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+        },
+      },
+    },
+  }
+</script>
+
+<style>
+  :root{
+    --sapphire:#0B192C;
+    --sapphire2:#122A47;
+    --platinum:#E2E8F0;
+    --glow:#38BDF8;
+    --cloud:#F8FAFC;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--cloud);
+    color:var(--sapphire);
+    font-family:'Plus Jakarta Sans', sans-serif;
+    overflow-x:hidden;
+    cursor:default;
+  }
+  h1,h2,h3,.font-display{ font-family:'Playfair Display', serif; }
+
+  ::selection{ background:var(--glow); color:#fff; }
+
+  /* Reduced motion respect */
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
+  }
+
+  /* Glass panel */
+  .glass{
+    background:rgba(255,255,255,0.55);
+    backdrop-filter:blur(18px) saturate(160%);
+    -webkit-backdrop-filter:blur(18px) saturate(160%);
+    border:1px solid rgba(255,255,255,0.6);
+    box-shadow:0 8px 40px rgba(11,25,44,0.08);
+  }
+  .glass-dark{
+    background:rgba(11,25,44,0.55);
+    backdrop-filter:blur(18px) saturate(160%);
+    -webkit-backdrop-filter:blur(18px) saturate(160%);
+    border:1px solid rgba(255,255,255,0.08);
+  }
+
+  /* Nav */
+  .navlink{ position:relative; }
+  .navlink::after{
+    content:''; position:absolute; left:0; bottom:-4px; width:0%; height:1px;
+    background:var(--glow); transition:width .35s ease;
+  }
+  .navlink:hover::after{ width:100%; }
+
+  /* Magnetic buttons */
+  .btn-magnetic{
+    position:relative; overflow:hidden; isolation:isolate;
+    transition:transform .35s cubic-bezier(.2,.9,.3,1.2), box-shadow .35s ease;
+  }
+  .btn-magnetic:hover{ box-shadow:0 0 30px rgba(56,189,248,0.55); }
+  .btn-primary{
+    background:var(--sapphire); color:#fff; border:1px solid rgba(255,255,255,0.1);
+  }
+  .btn-primary:hover{ background:#0f2138; }
+  .btn-ghost{
+    background:transparent; color:var(--sapphire); border:1px solid rgba(11,25,44,0.25);
+  }
+  .btn-ghost:hover{ border-color:var(--glow); color:#0B192C; }
+
+  .ripple{ position:absolute; border-radius:9999px; background:rgba(56,189,248,0.55); transform:scale(0); animation:rippleAnim .7s ease-out forwards; pointer-events:none; }
+  @keyframes rippleAnim{ to{ transform:scale(4); opacity:0; } }
+
+  /* Hero canvas wrap */
+  #hero-canvas-wrap{ position:absolute; inset:0; z-index:1; }
+  #hero-canvas-wrap canvas{ display:block; }
+
+  .grain{
+    position:fixed; inset:0; pointer-events:none; z-index:60; opacity:.035; mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* product card exploded hover */
+  .product-card{ transition:transform .5s cubic-bezier(.2,.9,.2,1), box-shadow .5s ease; }
+  .product-card:hover{ transform:translateY(-10px); }
+  .product-layer{ transition:transform .6s cubic-bezier(.2,.9,.2,1), opacity .5s ease; }
+  .product-card:hover .layer-1{ transform:translateY(-14px) scale(1.03); }
+  .product-card:hover .layer-2{ transform:translateY(-4px) scale(1.015); }
+  .product-card:hover .layer-3{ transform:translateY(6px); }
+
+  .finish-dot{ transition:transform .25s ease, box-shadow .25s ease; }
+  .finish-dot.active, .finish-dot:hover{ transform:scale(1.18); box-shadow:0 0 0 3px rgba(56,189,248,0.45); }
+
+  /* stat counters */
+  .stat-num{ font-variant-numeric:tabular-nums; }
+
+  /* Divider */
+  .hairline{ height:1px; background:linear-gradient(90deg, transparent, rgba(11,25,44,0.18), transparent); }
+
+  /* Back to top */
+  #backToTop{
+    position:fixed; right:22px; bottom:22px; z-index:50; width:48px; height:48px;
+    display:flex; align-items:center; justify-content:center; border-radius:9999px;
+    background:var(--sapphire); color:#fff; opacity:0; pointer-events:none;
+    transform:translateY(12px); transition:opacity .35s ease, transform .35s ease, box-shadow .35s ease;
+  }
+  #backToTop.show{ opacity:1; pointer-events:auto; transform:translateY(0); }
+  #backToTop:hover{ box-shadow:0 0 26px rgba(56,189,248,0.6); }
+
+  /* custom cursor glow (desktop only) */
+  #cursor-glow{
+    position:fixed; top:0; left:0; width:26px; height:26px; border-radius:9999px;
+    border:1px solid rgba(56,189,248,0.7); pointer-events:none; z-index:70;
+    transform:translate(-50%,-50%); transition:width .25s ease, height .25s ease, border-color .25s ease, background .25s ease;
+    mix-blend-mode:normal;
+  }
+  @media (hover:none){ #cursor-glow{ display:none; } }
+
+  .split-word{ display:inline-block; overflow:hidden; }
+  .split-word > span{ display:inline-block; transform:translateY(110%); }
+
+  input, textarea{ background:transparent; }
+  input::placeholder, textarea::placeholder{ color:rgba(11,25,44,0.45); }
+
+  .marquee-track{ display:flex; width:max-content; animation:marquee 28s linear infinite; }
+  @keyframes marquee{ from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
+</style>
+</head>
+
+<body class="bg-cloud text-sapphire antialiased">
+
+<div class="grain"></div>
+<div id="cursor-glow"></div>
+
+<!-- ============ NAV ============ -->
+<header id="siteNav" class="fixed top-0 inset-x-0 z-40 transition-all duration-500">
+  <div class="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between py-5">
+    <a href="#hero" class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-glow shadow-[0_0_12px_2px_rgba(56,189,248,0.8)]"></span>
+      <span class="font-display text-lg md:text-xl tracking-[0.18em] uppercase" id="navLogo">Nano <span class="font-normal italic">Electronics</span></span>
+    </a>
+    <nav class="hidden md:flex items-center gap-9 text-sm tracking-wide uppercase" id="navLinks">
+      <a href="#about" class="navlink">Legacy</a>
+      <a href="#collection" class="navlink">Collection</a>
+      <a href="#process" class="navlink">Experience</a>
+      <a href="#testimonials" class="navlink">Clients</a>
+      <a href="#contact" class="navlink">Concierge</a>
+    </nav>
+    <a href="#contact" class="btn-magnetic btn-primary hidden md:inline-flex text-xs uppercase tracking-widest px-5 py-3 rounded-full">Book Consultation</a>
+    <button id="menuBtn" class="md:hidden text-current" aria-label="Open menu">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+  <div id="mobileMenu" class="md:hidden hidden glass mx-4 mt-1 rounded-2xl px-6 py-6 flex flex-col gap-5 text-sm uppercase tracking-wide">
+    <a href="#about">Legacy</a>
+    <a href="#collection">Collection</a>
+    <a href="#process">Experience</a>
+    <a href="#testimonials">Clients</a>
+    <a href="#contact" class="btn-primary btn-magnetic text-center rounded-full py-3">Book Consultation</a>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section id="hero" class="relative min-h-[100svh] flex items-end md:items-center overflow-hidden bg-sapphire">
+  <div id="hero-canvas-wrap"></div>
+  <div class="absolute inset-0 z-[2] pointer-events-none" style="background:radial-gradient(ellipse at 65% 35%, rgba(56,189,248,0.16), transparent 55%), linear-gradient(180deg, rgba(11,25,44,0.15) 0%, rgba(11,25,44,0.55) 78%, rgba(11,25,44,0.92) 100%);"></div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pb-16 md:pb-0 w-full">
+    <div class="max-w-2xl">
+      <p class="hero-reveal text-glow tracking-[0.35em] text-xs md:text-sm uppercase mb-5 opacity-90">Addis Ababa · Est. Excellence</p>
+      <h1 class="text-white font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.05] mb-6">
+        <span class="split-line block overflow-hidden"><span class="split-inner inline-block">Redefining Modern</span></span>
+        <span class="split-line block overflow-hidden"><span class="split-inner inline-block">Living &amp; Smart Homes</span></span>
+        <span class="split-line block overflow-hidden"><span class="split-inner inline-block italic text-glow">in Addis Ababa</span></span>
+      </h1>
+      <p class="hero-reveal text-platinum/80 text-base md:text-lg max-w-lg mb-10 font-light">
+        Curated appliances and electronics engineered for those who consider a home the most important room in their life.
+      </p>
+      <div class="hero-reveal flex flex-wrap gap-4">
+        <a href="#collection" class="btn-magnetic btn-primary rounded-full px-8 py-4 text-xs md:text-sm uppercase tracking-widest">Explore Collection</a>
+        <a href="#contact" class="btn-magnetic rounded-full px-8 py-4 text-xs md:text-sm uppercase tracking-widest border border-white/30 text-white hover:border-glow hover:text-glow transition-colors">Visit Flagship Showroom</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-white/60">
+    <span class="text-[10px] uppercase tracking-[0.3em]">Scroll</span>
+    <span class="w-px h-10 bg-gradient-to-b from-white/70 to-transparent"></span>
+  </div>
+</section>
+
+<!-- ============ MARQUEE STRIP ============ -->
+<div class="bg-sapphire2 text-platinum/70 py-3 overflow-hidden border-y border-white/5">
+  <div class="marquee-track text-xs md:text-sm uppercase tracking-[0.3em]">
+    <span class="px-8">Smart Televisions</span><span class="px-8">·</span>
+    <span class="px-8">Advanced Refrigeration</span><span class="px-8">·</span>
+    <span class="px-8">High-Efficiency Laundry</span><span class="px-8">·</span>
+    <span class="px-8">Modern Cooking Suites</span><span class="px-8">·</span>
+    <span class="px-8">Smart Home Audio</span><span class="px-8">·</span>
+    <span class="px-8">Smart Televisions</span><span class="px-8">·</span>
+    <span class="px-8">Advanced Refrigeration</span><span class="px-8">·</span>
+    <span class="px-8">High-Efficiency Laundry</span><span class="px-8">·</span>
+    <span class="px-8">Modern Cooking Suites</span><span class="px-8">·</span>
+    <span class="px-8">Smart Home Audio</span><span class="px-8">·</span>
+  </div>
+</div>
+
+<!-- ============ ABOUT / LEGACY ============ -->
+<section id="about" class="relative py-28 md:py-36 bg-cloud overflow-hidden">
+  <div class="max-w-7xl mx-auto px-6 md:px-10">
+    <div class="grid md:grid-cols-2 gap-14 items-start">
+      <div>
+        <p class="text-glow tracking-[0.3em] text-xs uppercase mb-4">The Legacy</p>
+        <h2 class="font-display text-3xl md:text-5xl leading-tight mb-6 reveal-up">
+          A showroom built for people who notice the difference.
+        </h2>
+        <p class="text-sapphire/70 leading-relaxed mb-6 reveal-up max-w-lg">
+          Nano Electronics stands as Addis Ababa's premier destination for home appliances and electronics —
+          a single address where global engineering meets Ethiopian hospitality. Every product on our floor is
+          selected, tested, and stood behind by specialists who treat your home as seriously as you do.
+        </p>
+        <p class="text-sapphire/70 leading-relaxed reveal-up max-w-lg mb-10">
+          Visit our flagship showroom at <span class="font-medium text-sapphire">Eliana Mall, Churchill Avenue, Addis Ababa</span> —
+          where the collection lives, breathes, and performs in front of you.
+        </p>
+        <a href="#contact" class="btn-magnetic btn-ghost inline-flex rounded-full px-7 py-3.5 text-xs uppercase tracking-widest">Plan Your Visit</a>
+      </div>
+
+      <div class="grid grid-cols-3 gap-6 md:gap-8 pt-4">
+        <div class="text-center md:text-left">
+          <div class="font-display text-4xl md:text-5xl text-sapphire stat-num" data-count="12000" data-suffix="+">0</div>
+          <p class="text-xs md:text-sm uppercase tracking-widest text-sapphire/50 mt-2">Happy Clients</p>
+        </div>
+        <div class="text-center md:text-left">
+          <div class="font-display text-4xl md:text-5xl text-sapphire stat-num" data-count="40" data-suffix="+">0</div>
+          <p class="text-xs md:text-sm uppercase tracking-widest text-sapphire/50 mt-2">Global Brands</p>
+        </div>
+        <div class="text-center md:text-left">
+          <div class="font-display text-4xl md:text-5xl text-sapphire stat-num" data-count="15" data-suffix="+">0</div>
+          <p class="text-xs md:text-sm uppercase tracking-widest text-sapphire/50 mt-2">Years of Excellence</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="max-w-7xl mx-auto px-6 md:px-10"><div class="hairline"></div></div>
+
+<!-- ============ COLLECTION ============ -->
+<section id="collection" class="py-28 md:py-36 bg-cloud">
+  <div class="max-w-7xl mx-auto px-6 md:px-10">
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
+      <div>
+        <p class="text-glow tracking-[0.3em] text-xs uppercase mb-4">The Collection</p>
+        <h2 class="font-display text-3xl md:text-5xl leading-tight">Five categories. One standard.</h2>
+      </div>
+      <p class="text-sapphire/60 max-w-sm text-sm md:text-base">Hover any piece to see it come apart — layer by layer — and switch between our signature finishes.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-7" id="productGrid">
+      <!-- cards injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROCESS ============ -->
+<section id="process" class="relative py-28 md:py-36 bg-sapphire text-white overflow-hidden">
+  <div class="absolute inset-0 opacity-40" style="background:radial-gradient(circle at 20% 20%, rgba(56,189,248,0.25), transparent 45%), radial-gradient(circle at 85% 80%, rgba(56,189,248,0.14), transparent 45%);"></div>
+  <div class="relative max-w-7xl mx-auto px-6 md:px-10">
+    <p class="text-glow tracking-[0.3em] text-xs uppercase mb-4">The Experience</p>
+    <h2 class="font-display text-3xl md:text-5xl leading-tight mb-16 max-w-xl">A luxury buying journey, from Churchill Avenue to your front door.</h2>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="process-card glass-dark rounded-3xl p-8 md:p-10">
+        <span class="font-display text-glow text-5xl block mb-6">I</span>
+        <h3 class="font-display text-xl mb-3">Visit Our Showroom</h3>
+        <p class="text-platinum/70 text-sm leading-relaxed">Step into our elite showroom at Eliana Mall, Churchill Avenue — where every appliance is on full display, powered on, ready to experience.</p>
+      </div>
+      <div class="process-card glass-dark rounded-3xl p-8 md:p-10 md:mt-8">
+        <span class="font-display text-glow text-5xl block mb-6">II</span>
+        <h3 class="font-display text-xl mb-3">Expert Guidance</h3>
+        <p class="text-platinum/70 text-sm leading-relaxed">Our electronics specialists listen first, then match you to the exact model your home and lifestyle deserve.</p>
+      </div>
+      <div class="process-card glass-dark rounded-3xl p-8 md:p-10 md:mt-16">
+        <span class="font-display text-glow text-5xl block mb-6">III</span>
+        <h3 class="font-display text-xl mb-3">Secure Checkout &amp; Delivery</h3>
+        <p class="text-platinum/70 text-sm leading-relaxed">Complete your purchase securely and enjoy white-glove home delivery, anywhere across Addis Ababa.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section id="testimonials" class="py-28 md:py-36 bg-cloud">
+  <div class="max-w-7xl mx-auto px-6 md:px-10">
+    <p class="text-glow tracking-[0.3em] text-xs uppercase mb-4 text-center">In Their Words</p>
+    <h2 class="font-display text-3xl md:text-5xl leading-tight mb-16 text-center">Trusted across Addis Ababa</h2>
+
+    <div class="grid md:grid-cols-3 gap-7">
+      <blockquote class="glass rounded-3xl p-8 flex flex-col justify-between reveal-up">
+        <p class="font-display italic text-lg leading-relaxed mb-8">“Nano Electronics completely transformed our home. The picture quality of their smart TV and the efficiency of their modern refrigerator are unmatched in Addis.”</p>
+        <footer class="text-sm uppercase tracking-widest text-sapphire/60">— Dr. Dawit M.</footer>
+      </blockquote>
+      <blockquote class="glass rounded-3xl p-8 flex flex-col justify-between reveal-up md:mt-8">
+        <p class="font-display italic text-lg leading-relaxed mb-8">“Absolute professional service and top-tier luxury appliances. Finding a showroom of this caliber right on Churchill Avenue is a total game-changer.”</p>
+        <footer class="text-sm uppercase tracking-widest text-sapphire/60">— Hanna T.</footer>
+      </blockquote>
+      <blockquote class="glass rounded-3xl p-8 flex flex-col justify-between reveal-up">
+        <p class="font-display italic text-lg leading-relaxed mb-8">“Uncompromised quality and seamless delivery right to our residence. Worth every single birr.”</p>
+        <footer class="text-sm uppercase tracking-widest text-sapphire/60">— Samuel K.</footer>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONCIERGE / CONTACT / FOOTER ============ -->
+<section id="contact" class="relative py-28 md:py-36 bg-sapphire text-white overflow-hidden">
+  <div class="absolute inset-0 opacity-50" style="background:radial-gradient(ellipse at 50% 0%, rgba(56,189,248,0.18), transparent 55%);"></div>
+  <div class="relative max-w-7xl mx-auto px-6 md:px-10">
+    <div class="grid lg:grid-cols-2 gap-14">
+      <div>
+        <p class="text-glow tracking-[0.3em] text-xs uppercase mb-4">Private Inquiry</p>
+        <h2 class="font-display text-3xl md:text-5xl leading-tight mb-6">Request a VIP consultation.</h2>
+        <p class="text-platinum/70 mb-10 max-w-md leading-relaxed">Tell us about your home and one of our specialists will reach out to arrange a private walkthrough at Eliana Mall.</p>
+
+        <div class="space-y-5 mb-10">
+          <div class="flex items-center gap-4">
+            <span class="w-11 h-11 rounded-full glass-dark flex items-center justify-center shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8z" stroke="#38BDF8" stroke-width="1.4"/></svg>
+            </span>
+            <div>
+              <p class="text-xs uppercase tracking-widest text-platinum/50">Phone</p>
+              <a href="tel:0949153050" class="text-lg">094 915 3050</a>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="w-11 h-11 rounded-full glass-dark flex items-center justify-center shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.1 7-11.5A7 7 0 105 9.5C5 14.9 12 21 12 21z" stroke="#38BDF8" stroke-width="1.4"/><circle cx="12" cy="9.5" r="2.3" stroke="#38BDF8" stroke-width="1.4"/></svg>
+            </span>
+            <div>
+              <p class="text-xs uppercase tracking-widest text-platinum/50">Flagship Showroom</p>
+              <a href="https://www.google.com/maps/search/?api=1&query=Eliana+Mall+Churchill+Avenue+Addis+Ababa" target="_blank" rel="noopener" class="text-lg hover:text-glow transition-colors">Eliana Mall, Churchill Avenue, Addis Ababa</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <form id="inquiryForm" class="glass-dark rounded-3xl p-8 md:p-10 space-y-5">
+        <div>
+          <label class="text-xs uppercase tracking-widest text-platinum/50 block mb-2">Full Name</label>
+          <input required type="text" placeholder="Your name" class="w-full border-b border-white/20 focus:border-glow outline-none py-2.5 text-white transition-colors" />
+        </div>
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div>
+            <label class="text-xs uppercase tracking-widest text-platinum/50 block mb-2">Phone</label>
+            <input required type="tel" placeholder="09xx xxx xxx" class="w-full border-b border-white/20 focus:border-glow outline-none py-2.5 text-white transition-colors" />
+          </div>
+          <div>
+            <label class="text-xs uppercase tracking-widest text-platinum/50 block mb-2">Interested In</label>
+            <select class="w-full border-b border-white/20 focus:border-glow outline-none py-2.5 text-white bg-transparent transition-colors">
+              <option class="text-sapphire">Smart Televisions</option>
+              <option class="text-sapphire">Advanced Refrigerators</option>
+              <option class="text-sapphire">Washing Machines</option>
+              <option class="text-sapphire">Cooking Stoves</option>
+              <option class="text-sapphire">Smart Home Audio</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="text-xs uppercase tracking-widest text-platinum/50 block mb-2">Message</label>
+          <textarea rows="3" placeholder="Tell us about your home..." class="w-full border-b border-white/20 focus:border-glow outline-none py-2.5 text-white transition-colors resize-none"></textarea>
+        </div>
+        <button type="submit" class="btn-magnetic btn-primary w-full rounded-full py-4 text-xs uppercase tracking-widest mt-4">Request Consultation</button>
+        <p id="formNote" class="text-xs text-platinum/50 text-center pt-1"></p>
+      </form>
+    </div>
+
+    <div class="hairline my-16 !bg-white/10"></div>
+
+    <div class="flex flex-col md:flex-row items-center justify-between gap-6 text-platinum/50 text-xs uppercase tracking-widest">
+      <p>© <span id="year"></span> Nano Electronics. All rights reserved.</p>
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-glow"></span>
+        <span>Eliana Mall, Churchill Avenue, Addis Ababa</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<button id="backToTop" aria-label="Back to top">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 19V5M5 12l7-7 7 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ================= NAV ================= */
+const nav = document.getElementById('siteNav');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 40) {
+    nav.classList.add('glass'); nav.style.setProperty('color','#0B192C');
+  } else {
+    nav.classList.remove('glass'); nav.style.removeProperty('color');
+  }
+  document.getElementById('backToTop').classList.toggle('show', window.scrollY > 700);
+});
+const menuBtn = document.getElementById('menuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+document.getElementById('backToTop').addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+
+/* ================= CUSTOM CURSOR GLOW ================= */
+const cursorGlow = document.getElementById('cursor-glow');
+window.addEventListener('mousemove', e => {
+  gsap.to(cursorGlow, { x:e.clientX, y:e.clientY, duration:0.35, ease:'power3.out' });
+});
+document.querySelectorAll('a, button, input, textarea, select, .product-card').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursorGlow.style.width='46px'; cursorGlow.style.height='46px'; cursorGlow.style.background='rgba(56,189,248,0.12)'; });
+  el.addEventListener('mouseleave', () => { cursorGlow.style.width='26px'; cursorGlow.style.height='26px'; cursorGlow.style.background='transparent'; });
+});
+
+/* ================= MAGNETIC BUTTONS + RIPPLE ================= */
+document.querySelectorAll('.btn-magnetic').forEach(btn => {
+  btn.addEventListener('mousemove', (e) => {
+    const r = btn.getBoundingClientRect();
+    const x = e.clientX - r.left - r.width/2;
+    const y = e.clientY - r.top - r.height/2;
+    gsap.to(btn, { x:x*0.25, y:y*0.35, duration:0.4, ease:'power3.out' });
+  });
+  btn.addEventListener('mouseleave', () => gsap.to(btn, { x:0, y:0, duration:0.5, ease:'elastic.out(1,0.4)' }));
+  btn.addEventListener('click', function(e){
+    const r = btn.getBoundingClientRect();
+    const ripple = document.createElement('span');
+    ripple.className='ripple';
+    ripple.style.left = (e.clientX - r.left - 10)+'px';
+    ripple.style.top = (e.clientY - r.top - 10)+'px';
+    ripple.style.width = ripple.style.height = '20px';
+    btn.appendChild(ripple);
+    setTimeout(()=>ripple.remove(), 700);
+  });
+});
+
+/* ================= HERO TEXT REVEAL ================= */
+document.querySelectorAll('.split-inner').forEach((el,i) => {
+  gsap.to(el, { y:0, duration:1.1, delay:0.15*i+0.2, ease:'power4.out' });
+});
+gsap.to('.hero-reveal', { opacity:1, y:0, duration:1, delay:0.85, stagger:0.12, ease:'power3.out' });
+gsap.set('.hero-reveal', { opacity:0, y:24 });
+
+/* ================= SCROLL REVEALS ================= */
+gsap.utils.toArray('.reveal-up').forEach(el => {
+  gsap.fromTo(el, { opacity:0, y:36 }, {
+    opacity:1, y:0, duration:0.9, ease:'power3.out',
+    scrollTrigger:{ trigger:el, start:'top 85%' }
+  });
+});
+gsap.utils.toArray('.process-card').forEach((el,i) => {
+  gsap.fromTo(el, { opacity:0, y:50 }, {
+    opacity:1, y:0, duration:0.9, delay:i*0.08, ease:'power3.out',
+    scrollTrigger:{ trigger:el, start:'top 88%' }
+  });
+});
+
+/* ================= STAT COUNTERS ================= */
+document.querySelectorAll('.stat-num').forEach(el => {
+  const target = parseInt(el.dataset.count, 10);
+  const suffix = el.dataset.suffix || '';
+  ScrollTrigger.create({
+    trigger: el, start:'top 90%', once:true,
+    onEnter: () => {
+      let obj = { val:0 };
+      gsap.to(obj, {
+        val:target, duration:2, ease:'power2.out',
+        onUpdate: () => el.textContent = Math.floor(obj.val).toLocaleString() + suffix
+      });
+    }
+  });
+});
+
+/* ================= PRODUCT GRID ================= */
+const products = [
+  { name:'Smart Televisions', tag:'Cinema at home', icon:'tv' },
+  { name:'Advanced Refrigerators', tag:'Precision cooling', icon:'fridge' },
+  { name:'Washing Machines', tag:'High-efficiency care', icon:'washer' },
+  { name:'Cooking Stoves', tag:'Modern kitchens', icon:'stove' },
+  { name:'Smart Home Audio', tag:'Immersive sound', icon:'audio' },
+  { name:'Climate & Air', tag:'Perfected comfort', icon:'air' },
+];
+const finishes = [
+  { name:'Obsidian Black', hex:'#0B192C' },
+  { name:'Metallic Platinum', hex:'#C9D3DE' },
+  { name:'Arctic White', hex:'#F8FAFC' },
+];
+const icons = {
+  tv: '<rect x="4" y="5" width="24" height="16" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M12 25h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+  fridge: '<rect x="8" y="3" width="16" height="26" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M8 12h16" stroke="currentColor" stroke-width="1.4"/><path d="M11 6.5v3M11 15v3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+  washer: '<rect x="5" y="4" width="22" height="24" rx="3" stroke="currentColor" stroke-width="1.4"/><circle cx="16" cy="17" r="6" stroke="currentColor" stroke-width="1.4"/><circle cx="9" cy="8" r="1" fill="currentColor"/>',
+  stove: '<rect x="5" y="7" width="22" height="18" rx="2" stroke="currentColor" stroke-width="1.4"/><circle cx="11" cy="13" r="2.6" stroke="currentColor" stroke-width="1.3"/><circle cx="21" cy="13" r="2.6" stroke="currentColor" stroke-width="1.3"/><circle cx="11" cy="20" r="2.6" stroke="currentColor" stroke-width="1.3"/><circle cx="21" cy="20" r="2.6" stroke="currentColor" stroke-width="1.3"/>',
+  audio: '<rect x="10" y="3" width="12" height="26" rx="4" stroke="currentColor" stroke-width="1.4"/><circle cx="16" cy="10" r="2.4" stroke="currentColor" stroke-width="1.3"/><circle cx="16" cy="20" r="3.4" stroke="currentColor" stroke-width="1.3"/>',
+  air: '<path d="M5 12h16a4 4 0 100-8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M5 18h20a4 4 0 110 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M5 25h10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>'
+};
+
+const grid = document.getElementById('productGrid');
+products.forEach((p) => {
+  const card = document.createElement('div');
+  card.className = 'product-card relative rounded-3xl p-8 glass overflow-hidden group cursor-pointer';
+  card.innerHTML = `
+    <div class="relative h-36 mb-8 flex items-center justify-center">
+      <div class="product-layer layer-3 absolute w-28 h-28 rounded-full opacity-0 group-hover:opacity-100" style="background:radial-gradient(circle, rgba(56,189,248,0.35), transparent 70%);"></div>
+      <div class="product-layer layer-2 absolute w-24 h-24 rounded-2xl border border-sapphire/10"></div>
+      <svg class="product-layer layer-1 relative text-sapphire" width="64" height="64" viewBox="0 0 32 32" fill="none">${icons[p.icon]}</svg>
+    </div>
+    <h3 class="font-display text-xl mb-1">${p.name}</h3>
+    <p class="text-sapphire/50 text-sm mb-6">${p.tag}</p>
+    <div class="flex items-center gap-3 finish-row">
+      ${finishes.map((f,i)=>`<button type="button" data-name="${f.name}" class="finish-dot ${i===0?'active':''} w-5 h-5 rounded-full border border-sapphire/15" style="background:${f.hex}" title="${f.name}"></button>`).join('')}
+      <span class="finish-label text-xs text-sapphire/50 ml-1">${finishes[0].name}</span>
+    </div>
+  `;
+  card.querySelectorAll('.finish-dot').forEach(dot => {
+    dot.addEventListener('click', (e) => {
+      e.stopPropagation();
+      card.querySelectorAll('.finish-dot').forEach(d=>d.classList.remove('active'));
+      dot.classList.add('active');
+      card.querySelector('.finish-label').textContent = dot.dataset.name;
+    });
+  });
+  grid.appendChild(card);
+});
+
+/* ================= FORM ================= */
+document.getElementById('inquiryForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  document.getElementById('formNote').textContent = 'Thank you — a Nano Electronics specialist will contact you shortly.';
+  this.reset();
+});
+
+/* =====================================================================
+   THREE.JS HERO — assembling metallic "signature" object
+   A faceted, low-poly appliance-silhouette core built from platinum
+   shard fragments that fly in and assemble on load, then idles with
+   slow rotation + cursor parallax tilt (echoes the exploded-view
+   product interaction used later on the page).
+===================================================================== */
+(function(){
+  const wrap = document.getElementById('hero-canvas-wrap');
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x0B192C, 0.045);
+
+  const camera = new THREE.PerspectiveCamera(42, wrap.clientWidth/wrap.clientHeight, 0.1, 100);
+  camera.position.set(0, 0, 11);
+
+  const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+  wrap.appendChild(renderer.domElement);
+
+  // Lighting
+  const key = new THREE.PointLight(0x38BDF8, 3.2, 40);
+  key.position.set(6, 6, 8);
+  scene.add(key);
+  const rim = new THREE.PointLight(0xffffff, 1.4, 40);
+  rim.position.set(-8, -4, -6);
+  scene.add(rim);
+  const amb = new THREE.AmbientLight(0x8fb4d9, 0.55);
+  scene.add(amb);
+
+  const group = new THREE.Group();
+  scene.add(group);
+
+  const platinumMat = new THREE.MeshStandardMaterial({ color:0xE2E8F0, metalness:0.92, roughness:0.22, envMapIntensity:1 });
+  const glowMat = new THREE.MeshBasicMaterial({ color:0x38BDF8 });
+
+  // Core: faceted icosahedron "screen/appliance" silhouette
+  const coreGeo = new THREE.IcosahedronGeometry(2.6, 1);
+  const core = new THREE.Mesh(coreGeo, platinumMat);
+  group.add(core);
+
+  // Glowing edge wireframe
+  const edges = new THREE.EdgesGeometry(coreGeo);
+  const edgeLines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color:0x38BDF8, transparent:true, opacity:0.8 }));
+  group.add(edgeLines);
+
+  // Fragment shards (exploded view -> assemble)
+  const shardCount = 26;
+  const shards = [];
+  for (let i=0;i<shardCount;i++){
+    const size = 0.28 + Math.random()*0.4;
+    const geo = Math.random() > 0.5
+      ? new THREE.TetrahedronGeometry(size)
+      : new THREE.OctahedronGeometry(size*0.8);
+    const mat = Math.random() > 0.7 ? glowMat.clone() : platinumMat.clone();
+    if (mat.metalness !== undefined){ mat.roughness = 0.3; mat.metalness = 0.85; }
+    const mesh = new THREE.Mesh(geo, mat);
+
+    const dir = new THREE.Vector3(
+      (Math.random()-0.5), (Math.random()-0.5), (Math.random()-0.5)
+    ).normalize();
+    const finalRadius = 2.6 + Math.random()*0.6;
+    const finalPos = dir.clone().multiplyScalar(finalRadius);
+
+    mesh.position.copy(dir.clone().multiplyScalar(9 + Math.random()*6));
+    mesh.userData.finalPos = finalPos;
+    mesh.userData.rotSpeed = (Math.random()-0.5) * 0.02;
+    mesh.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
+
+    group.add(mesh);
+    shards.push(mesh);
+  }
+
+  // Assemble animation
+  shards.forEach((s, i) => {
+    gsap.to(s.position, {
+      x: s.userData.finalPos.x, y: s.userData.finalPos.y, z: s.userData.finalPos.z,
+      duration: 2.2 + Math.random()*0.8,
+      delay: 0.15 + i*0.035,
+      ease: 'power3.out'
+    });
+  });
+  gsap.from(core.scale, { x:0.001,y:0.001,z:0.001, duration:1.6, delay:0.1, ease:'power3.out' });
+  gsap.from(edgeLines.material, { opacity:0, duration:1.8, delay:0.6 });
+
+  // Mouse parallax tilt
+  let targetX = 0, targetY = 0;
+  window.addEventListener('mousemove', (e) => {
+    targetX = (e.clientX / window.innerWidth - 0.5) * 0.6;
+    targetY = (e.clientY / window.innerHeight - 0.5) * 0.6;
+  });
+
+  function resize(){
+    const w = wrap.clientWidth, h = wrap.clientHeight;
+    camera.aspect = w/h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w,h);
+  }
+  window.addEventListener('resize', resize);
+
+  const clock = new THREE.Clock();
+  function animate(){
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+
+    group.rotation.y += 0.0028;
+    group.rotation.y += (targetX - group.rotation.y*0) * 0; // no-op guard
+    group.rotation.x += (targetY*0.6 - group.rotation.x) * 0.04;
+    group.rotation.y += (targetX*0.6 - (group.rotation.y % (Math.PI*2))) * 0.0; // keep spin autonomous
+
+    core.rotation.y = t * 0.15;
+    edgeLines.rotation.copy(core.rotation);
+
+    shards.forEach(s => { s.rotation.x += s.userData.rotSpeed; s.rotation.y += s.userData.rotSpeed*1.3; });
+
+    key.position.x = Math.sin(t*0.3)*7 + 2;
+
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+</script>
+
+</body>
+</html>
