@@ -18,9 +18,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-<!-- Three.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
 <script>
   if (typeof tailwind !== 'undefined') {
   tailwind.config = {
@@ -143,12 +140,41 @@
 
   /* ---- Structural fallback (plain CSS, does NOT depend on Tailwind loading) ---- */
   header#siteNav{ position:fixed; top:0; left:0; right:0; z-index:40; }
-  #hero{ position:relative; min-height:100svh; min-height:100vh; overflow:hidden; }
-  #hero-canvas-wrap{ position:absolute; inset:0; top:0; left:0; right:0; bottom:0; width:100%; height:100%; z-index:1; overflow:hidden; }
-  #hero-canvas-wrap canvas{ display:block; width:100% !important; height:100% !important; }
+  #hero{ position:relative; min-height:100svh; min-height:100vh; overflow:hidden; background:#0B192C; }
   section{ position:relative; }
   #backToTop{ position:fixed; }
   /* ---- end structural fallback ---- */
+
+  /* Hero photo background */
+  .hero-bg{
+    position:absolute; inset:0; width:100%; height:100%; z-index:0;
+    background-image:url('images/store-bg.jpg');
+    background-size:cover; background-position:center;
+    transform:scale(1.05); will-change:transform;
+    animation:kenBurns 22s ease-in-out infinite alternate;
+  }
+  @keyframes kenBurns{
+    0%{ transform:scale(1.05) translate(0,0); }
+    100%{ transform:scale(1.18) translate(-1%,-1%); }
+  }
+  /* Obsidian-to-sapphire luxury overlay + vignette so type stays crisp over any photo */
+  .hero-overlay{
+    position:absolute; inset:0; z-index:1; pointer-events:none;
+    background:
+      radial-gradient(ellipse 90% 70% at 20% 60%, rgba(4,10,20,0.92) 0%, rgba(4,10,20,0.55) 45%, rgba(4,10,20,0.15) 70%),
+      linear-gradient(180deg, rgba(4,10,20,0.75) 0%, rgba(8,17,32,0.55) 35%, rgba(6,14,28,0.72) 78%, rgba(3,8,17,0.96) 100%),
+      radial-gradient(ellipse at 70% 30%, rgba(56,189,248,0.14), transparent 60%);
+  }
+  .hero-vignette{
+    position:absolute; inset:0; z-index:1; pointer-events:none;
+    box-shadow:inset 0 0 18vw rgba(0,0,0,0.65);
+  }
+  .hero-grid-sheen{
+    position:absolute; inset:0; z-index:1; pointer-events:none; opacity:0.25;
+    background-image:linear-gradient(rgba(56,189,248,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(56,189,248,0.06) 1px, transparent 1px);
+    background-size:56px 56px;
+    mask-image:linear-gradient(180deg, rgba(0,0,0,0.5), transparent 70%);
+  }
 
   .grain{
     position:fixed; inset:0; pointer-events:none; z-index:60; opacity:.035; mix-blend-mode:multiply;
@@ -237,23 +263,25 @@
 
 <!-- ============ HERO ============ -->
 <section id="hero" class="relative min-h-[100svh] flex items-end md:items-center overflow-hidden bg-sapphire">
-  <div id="hero-canvas-wrap"></div>
-  <div class="absolute inset-0 z-[2] pointer-events-none" style="background:radial-gradient(ellipse at 65% 35%, rgba(56,189,248,0.16), transparent 55%), linear-gradient(180deg, rgba(11,25,44,0.15) 0%, rgba(11,25,44,0.55) 78%, rgba(11,25,44,0.92) 100%);"></div>
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-grid-sheen"></div>
+  <div class="hero-vignette"></div>
 
   <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pb-16 md:pb-0 w-full">
     <div class="max-w-2xl">
       <p class="hero-reveal text-glow tracking-[0.35em] text-xs md:text-sm uppercase mb-5 opacity-90">Addis Ababa · Est. Excellence</p>
-      <h1 class="text-white font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.05] mb-6">
+      <h1 class="text-white font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.05] mb-6" style="text-shadow:0 4px 30px rgba(0,0,0,0.55);">
         <span class="split-line block overflow-hidden"><span class="split-inner inline-block">Redefining Modern</span></span>
         <span class="split-line block overflow-hidden"><span class="split-inner inline-block">Living &amp; Smart Homes</span></span>
         <span class="split-line block overflow-hidden"><span class="split-inner inline-block italic text-glow">in Addis Ababa</span></span>
       </h1>
-      <p class="hero-reveal text-platinum/80 text-base md:text-lg max-w-lg mb-10 font-light">
+      <p class="hero-reveal text-platinum/85 text-base md:text-lg max-w-lg mb-10 font-light" style="text-shadow:0 2px 16px rgba(0,0,0,0.5);">
         Curated appliances and electronics engineered for those who consider a home the most important room in their life.
       </p>
       <div class="hero-reveal flex flex-wrap gap-4">
         <a href="#collection" class="btn-magnetic btn-primary rounded-full px-8 py-4 text-xs md:text-sm uppercase tracking-widest">Explore Collection</a>
-        <a href="#contact" class="btn-magnetic rounded-full px-8 py-4 text-xs md:text-sm uppercase tracking-widest border border-white/30 text-white hover:border-glow hover:text-glow transition-colors">Visit Flagship Showroom</a>
+        <a href="#contact" class="btn-magnetic rounded-full px-8 py-4 text-xs md:text-sm uppercase tracking-widest border border-white/30 text-white hover:border-glow hover:text-glow transition-colors backdrop-blur-sm bg-white/5">Visit Flagship Showroom</a>
       </div>
     </div>
   </div>
@@ -602,126 +630,46 @@ products.forEach((p) => {
   grid.appendChild(card);
 });
 
+
 /* =====================================================================
-   THREE.JS HERO — assembling metallic "signature" object
-   A faceted, low-poly appliance-silhouette core built from platinum
-   shard fragments that fly in and assemble on load, then idles with
-   slow rotation + cursor parallax tilt (echoes the exploded-view
-   product interaction used later on the page).
+   HERO PHOTO BACKGROUND — subtle scroll parallax on top of the
+   Ken Burns zoom already handled in CSS. Pure transform, GPU-friendly,
+   and disabled automatically for prefers-reduced-motion via the CSS
+   media query already applied to the whole page.
 ===================================================================== */
 (function(){
-  const wrap = document.getElementById('hero-canvas-wrap');
-  const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x0B192C, 0.045);
+  const heroBg = document.getElementById('heroBg');
+  const hero = document.getElementById('hero');
+  if (!heroBg || !hero) return;
 
-  const camera = new THREE.PerspectiveCamera(42, wrap.clientWidth/wrap.clientHeight, 0.1, 100);
-  camera.position.set(0, 0, 11);
-
-  const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(wrap.clientWidth, wrap.clientHeight);
-  wrap.appendChild(renderer.domElement);
-
-  // Lighting
-  const key = new THREE.PointLight(0x38BDF8, 3.2, 40);
-  key.position.set(6, 6, 8);
-  scene.add(key);
-  const rim = new THREE.PointLight(0xffffff, 1.4, 40);
-  rim.position.set(-8, -4, -6);
-  scene.add(rim);
-  const amb = new THREE.AmbientLight(0x8fb4d9, 0.55);
-  scene.add(amb);
-
-  const group = new THREE.Group();
-  scene.add(group);
-
-  const platinumMat = new THREE.MeshStandardMaterial({ color:0xE2E8F0, metalness:0.92, roughness:0.22, envMapIntensity:1 });
-  const glowMat = new THREE.MeshBasicMaterial({ color:0x38BDF8 });
-
-  // Core: faceted icosahedron "screen/appliance" silhouette
-  const coreGeo = new THREE.IcosahedronGeometry(2.6, 1);
-  const core = new THREE.Mesh(coreGeo, platinumMat);
-  group.add(core);
-
-  // Glowing edge wireframe
-  const edges = new THREE.EdgesGeometry(coreGeo);
-  const edgeLines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color:0x38BDF8, transparent:true, opacity:0.8 }));
-  group.add(edgeLines);
-
-  // Fragment shards (exploded view -> assemble)
-  const shardCount = 26;
-  const shards = [];
-  for (let i=0;i<shardCount;i++){
-    const size = 0.28 + Math.random()*0.4;
-    const geo = Math.random() > 0.5
-      ? new THREE.TetrahedronGeometry(size)
-      : new THREE.OctahedronGeometry(size*0.8);
-    const mat = Math.random() > 0.7 ? glowMat.clone() : platinumMat.clone();
-    if (mat.metalness !== undefined){ mat.roughness = 0.3; mat.metalness = 0.85; }
-    const mesh = new THREE.Mesh(geo, mat);
-
-    const dir = new THREE.Vector3(
-      (Math.random()-0.5), (Math.random()-0.5), (Math.random()-0.5)
-    ).normalize();
-    const finalRadius = 2.6 + Math.random()*0.6;
-    const finalPos = dir.clone().multiplyScalar(finalRadius);
-
-    mesh.position.copy(dir.clone().multiplyScalar(9 + Math.random()*6));
-    mesh.userData.finalPos = finalPos;
-    mesh.userData.rotSpeed = (Math.random()-0.5) * 0.02;
-    mesh.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
-
-    group.add(mesh);
-    shards.push(mesh);
+  let ticking = false;
+  function updateParallax(){
+    const rect = hero.getBoundingClientRect();
+    const progress = Math.min(Math.max(-rect.top / (rect.height || 1), 0), 1);
+    const translateY = progress * 60; // px of drift as the hero scrolls away
+    heroBg.style.transform = `translateY(${translateY}px)`;
+    ticking = false;
   }
+  window.addEventListener('scroll', () => {
+    if (!ticking){
+      requestAnimationFrame(updateParallax);
+      ticking = true;
+    }
+  }, { passive:true });
+  updateParallax();
 
-  // Assemble animation
-  shards.forEach((s, i) => {
-    gsap.to(s.position, {
-      x: s.userData.finalPos.x, y: s.userData.finalPos.y, z: s.userData.finalPos.z,
-      duration: 2.2 + Math.random()*0.8,
-      delay: 0.15 + i*0.035,
-      ease: 'power3.out'
+  // Gentle cursor-driven tilt on desktop, mirroring the tactile feel
+  // used across the rest of the site's micro-interactions.
+  if (window.matchMedia('(hover:hover)').matches){
+    hero.addEventListener('mousemove', (e) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 10;
+      const y = (e.clientY / window.innerHeight - 0.5) * 10;
+      gsap.to(heroBg, { x, y, duration:0.8, ease:'power2.out' });
     });
-  });
-  gsap.from(core.scale, { x:0.001,y:0.001,z:0.001, duration:1.6, delay:0.1, ease:'power3.out' });
-  gsap.from(edgeLines.material, { opacity:0, duration:1.8, delay:0.6 });
-
-  // Mouse parallax tilt
-  let targetX = 0, targetY = 0;
-  window.addEventListener('mousemove', (e) => {
-    targetX = (e.clientX / window.innerWidth - 0.5) * 0.6;
-    targetY = (e.clientY / window.innerHeight - 0.5) * 0.6;
-  });
-
-  function resize(){
-    const w = wrap.clientWidth, h = wrap.clientHeight;
-    camera.aspect = w/h;
-    camera.updateProjectionMatrix();
-    renderer.setSize(w,h);
+    hero.addEventListener('mouseleave', () => {
+      gsap.to(heroBg, { x:0, y:0, duration:0.8, ease:'power2.out' });
+    });
   }
-  window.addEventListener('resize', resize);
-
-  const clock = new THREE.Clock();
-  function animate(){
-    requestAnimationFrame(animate);
-    const t = clock.getElapsedTime();
-
-    group.rotation.y += 0.0028;
-    group.rotation.y += (targetX - group.rotation.y*0) * 0; // no-op guard
-    group.rotation.x += (targetY*0.6 - group.rotation.x) * 0.04;
-    group.rotation.y += (targetX*0.6 - (group.rotation.y % (Math.PI*2))) * 0.0; // keep spin autonomous
-
-    core.rotation.y = t * 0.15;
-    edgeLines.rotation.copy(core.rotation);
-
-    shards.forEach(s => { s.rotation.x += s.userData.rotSpeed; s.rotation.y += s.userData.rotSpeed*1.3; });
-
-    key.position.x = Math.sin(t*0.3)*7 + 2;
-
-    renderer.render(scene, camera);
-  }
-  animate();
 })();
 </script>
 
