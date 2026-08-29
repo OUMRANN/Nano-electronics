@@ -62,27 +62,24 @@
 
   ::selection{ background:var(--glow); color:#fff; }
 
-  /* Reduced motion respect */
   @media (prefers-reduced-motion: reduce){
     *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
   }
 
-  /* Glass panel */
   .glass{
-    background:rgba(255,255,255,0.55);
+    background:rgba(255,255,255,0.75);
     backdrop-filter:blur(18px) saturate(160%);
     -webkit-backdrop-filter:blur(18px) saturate(160%);
     border:1px solid rgba(255,255,255,0.6);
     box-shadow:0 8px 40px rgba(11,25,44,0.08);
   }
   .glass-dark{
-    background:rgba(11,25,44,0.55);
+    background:rgba(11,25,44,0.65);
     backdrop-filter:blur(18px) saturate(160%);
     -webkit-backdrop-filter:blur(18px) saturate(160%);
     border:1px solid rgba(255,255,255,0.08);
   }
 
-  /* Nav */
   .navlink{ position:relative; }
   .navlink::after{
     content:''; position:absolute; left:0; bottom:-4px; width:0%; height:1px;
@@ -90,7 +87,6 @@
   }
   .navlink:hover::after{ width:100%; }
 
-  /* Magnetic buttons */
   .btn-magnetic{
     position:relative; overflow:hidden; isolation:isolate;
     transition:transform .35s cubic-bezier(.2,.9,.3,1.2), box-shadow .35s ease;
@@ -108,8 +104,7 @@
   .ripple{ position:absolute; border-radius:9999px; background:rgba(56,189,248,0.55); transform:scale(0); animation:rippleAnim .7s ease-out forwards; pointer-events:none; }
   @keyframes rippleAnim{ to{ transform:scale(4); opacity:0; } }
 
-  /* Hero canvas wrap */
-  #hero-canvas-wrap{ position:absolute; inset:0; z-index:1; }
+  #hero-canvas-wrap{ position:absolute; inset:0; z-index:0; pointer-events:none; }
   #hero-canvas-wrap canvas{ display:block; }
 
   .grain{
@@ -117,7 +112,6 @@
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   }
 
-  /* product card exploded hover */
   .product-card{ transition:transform .5s cubic-bezier(.2,.9,.2,1), box-shadow .5s ease; }
   .product-card:hover{ transform:translateY(-10px); }
   .product-layer{ transition:transform .6s cubic-bezier(.2,.9,.2,1), opacity .5s ease; }
@@ -128,13 +122,9 @@
   .finish-dot{ transition:transform .25s ease, box-shadow .25s ease; }
   .finish-dot.active, .finish-dot:hover{ transform:scale(1.18); box-shadow:0 0 0 3px rgba(56,189,248,0.45); }
 
-  /* stat counters */
   .stat-num{ font-variant-numeric:tabular-nums; }
-
-  /* Divider */
   .hairline{ height:1px; background:linear-gradient(90deg, transparent, rgba(11,25,44,0.18), transparent); }
 
-  /* Back to top */
   #backToTop{
     position:fixed; right:22px; bottom:22px; z-index:50; width:48px; height:48px;
     display:flex; align-items:center; justify-content:center; border-radius:9999px;
@@ -144,19 +134,17 @@
   #backToTop.show{ opacity:1; pointer-events:auto; transform:translateY(0); }
   #backToTop:hover{ box-shadow:0 0 26px rgba(56,189,248,0.6); }
 
-  /* custom cursor glow (desktop only) */
   #cursor-glow{
     position:fixed; top:0; left:0; width:26px; height:26px; border-radius:9999px;
     border:1px solid rgba(56,189,248,0.7); pointer-events:none; z-index:70;
     transform:translate(-50%,-50%); transition:width .25s ease, height .25s ease, border-color .25s ease, background .25s ease;
-    mix-blend-mode:normal;
   }
   @media (hover:none){ #cursor-glow{ display:none; } }
 
   .split-word{ display:inline-block; overflow:hidden; }
   .split-word > span{ display:inline-block; transform:translateY(110%); }
 
-  input, textarea{ background:transparent; }
+  input, textarea, select{ background:transparent; }
   input::placeholder, textarea::placeholder{ color:rgba(11,25,44,0.45); }
 
   .marquee-track{ display:flex; width:max-content; animation:marquee 28s linear infinite; }
@@ -170,47 +158,47 @@
 <div id="cursor-glow"></div>
 
 <!-- ============ NAV ============ -->
-<header id="siteNav" class="fixed top-0 inset-x-0 z-40 transition-all duration-500">
-  <div class="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between py-5">
+<header id="siteNav" class="fixed top-0 inset-x-0 z-50 transition-all duration-500">
+  <div class="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between py-4">
     <a href="#hero" class="flex items-center gap-2">
       <span class="w-2.5 h-2.5 rounded-full bg-glow shadow-[0_0_12px_2px_rgba(56,189,248,0.8)]"></span>
-      <span class="font-display text-lg md:text-xl tracking-[0.18em] uppercase" id="navLogo">Nano <span class="font-normal italic">Electronics</span></span>
+      <span class="font-display text-lg md:text-xl tracking-[0.18em] uppercase text-white transition-colors" id="navLogo">Nano <span class="font-normal italic">Electronics</span></span>
     </a>
-    <nav class="hidden md:flex items-center gap-9 text-sm tracking-wide uppercase" id="navLinks">
+    <nav class="hidden lg:flex items-center gap-9 text-sm tracking-wide uppercase text-white/90" id="navLinks">
       <a href="#about" class="navlink">Legacy</a>
       <a href="#collection" class="navlink">Collection</a>
       <a href="#process" class="navlink">Experience</a>
       <a href="#testimonials" class="navlink">Clients</a>
       <a href="#contact" class="navlink">Concierge</a>
     </nav>
-    <a href="#contact" class="btn-magnetic btn-primary hidden md:inline-flex text-xs uppercase tracking-widest px-5 py-3 rounded-full">Book Consultation</a>
-    <button id="menuBtn" class="md:hidden text-current" aria-label="Open menu">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    <a href="#contact" class="btn-magnetic btn-primary hidden lg:inline-flex text-xs uppercase tracking-widest px-5 py-3 rounded-full">Book Consultation</a>
+    <button id="menuBtn" class="lg:hidden text-white p-2" aria-label="Open menu">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
     </button>
   </div>
-  <div id="mobileMenu" class="md:hidden hidden glass mx-4 mt-1 rounded-2xl px-6 py-6 flex flex-col gap-5 text-sm uppercase tracking-wide">
-    <a href="#about">Legacy</a>
-    <a href="#collection">Collection</a>
-    <a href="#process">Experience</a>
-    <a href="#testimonials">Clients</a>
-    <a href="#contact" class="btn-primary btn-magnetic text-center rounded-full py-3">Book Consultation</a>
+  <div id="mobileMenu" class="lg:hidden hidden glass-dark text-white mx-4 mt-1 rounded-2xl px-6 py-6 flex flex-col gap-5 text-sm uppercase tracking-wide">
+    <a href="#about" class="mobile-link">Legacy</a>
+    <a href="#collection" class="mobile-link">Collection</a>
+    <a href="#process" class="mobile-link">Experience</a>
+    <a href="#testimonials" class="mobile-link">Clients</a>
+    <a href="#contact" class="btn-primary btn-magnetic text-center rounded-full py-3 mobile-link">Book Consultation</a>
   </div>
 </header>
 
 <!-- ============ HERO ============ -->
-<section id="hero" class="relative min-h-[100svh] flex items-end md:items-center overflow-hidden bg-sapphire">
+<section id="hero" class="relative min-h-[100svh] flex items-center overflow-hidden bg-sapphire pt-24 pb-16">
   <div id="hero-canvas-wrap"></div>
-  <div class="absolute inset-0 z-[2] pointer-events-none" style="background:radial-gradient(ellipse at 65% 35%, rgba(56,189,248,0.16), transparent 55%), linear-gradient(180deg, rgba(11,25,44,0.15) 0%, rgba(11,25,44,0.55) 78%, rgba(11,25,44,0.92) 100%);"></div>
+  <div class="absolute inset-0 z-[1] pointer-events-none" style="background:radial-gradient(ellipse at 65% 35%, rgba(56,189,248,0.16), transparent 55%), linear-gradient(180deg, rgba(11,25,44,0.2) 0%, rgba(11,25,44,0.6) 78%, rgba(11,25,44,0.95) 100%);"></div>
 
-  <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pb-16 md:pb-0 w-full">
+  <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-10 w-full">
     <div class="max-w-2xl">
-      <p class="hero-reveal text-glow tracking-[0.35em] text-xs md:text-sm uppercase mb-5 opacity-90">Addis Ababa · Est. Excellence</p>
-      <h1 class="text-white font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.05] mb-6">
+      <p class="hero-reveal text-glow tracking-[0.35em] text-xs md:text-sm uppercase mb-4 opacity-90">Addis Ababa · Est. Excellence</p>
+      <h1 class="text-white font-display text-3xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.08] mb-6">
         <span class="split-line block overflow-hidden"><span class="split-inner inline-block">Redefining Modern</span></span>
         <span class="split-line block overflow-hidden"><span class="split-inner inline-block">Living &amp; Smart Homes</span></span>
         <span class="split-line block overflow-hidden"><span class="split-inner inline-block italic text-glow">in Addis Ababa</span></span>
       </h1>
-      <p class="hero-reveal text-platinum/80 text-base md:text-lg max-w-lg mb-10 font-light">
+      <p class="hero-reveal text-platinum/80 text-base md:text-lg max-w-lg mb-8 font-light">
         Curated appliances and electronics engineered for those who consider a home the most important room in their life.
       </p>
       <div class="hero-reveal flex flex-wrap gap-4">
@@ -220,9 +208,9 @@
     </div>
   </div>
 
-  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-white/60">
+  <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 hidden sm:flex flex-col items-center gap-2 text-white/60">
     <span class="text-[10px] uppercase tracking-[0.3em]">Scroll</span>
-    <span class="w-px h-10 bg-gradient-to-b from-white/70 to-transparent"></span>
+    <span class="w-px h-8 bg-gradient-to-b from-white/70 to-transparent"></span>
   </div>
 </section>
 
@@ -294,15 +282,13 @@
       <p class="text-sapphire/60 max-w-sm text-sm md:text-base">Hover any piece to see it come apart — layer by layer — and switch between our signature finishes.</p>
     </div>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-7" id="productGrid">
-      <!-- cards injected by JS -->
-    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-7" id="productGrid"></div>
   </div>
 </section>
 
 <!-- ============ PROCESS ============ -->
 <section id="process" class="relative py-28 md:py-36 bg-sapphire text-white overflow-hidden">
-  <div class="absolute inset-0 opacity-40" style="background:radial-gradient(circle at 20% 20%, rgba(56,189,248,0.25), transparent 45%), radial-gradient(circle at 85% 80%, rgba(56,189,248,0.14), transparent 45%);"></div>
+  <div class="absolute inset-0 opacity-40 pointer-events-none" style="background:radial-gradient(circle at 20% 20%, rgba(56,189,248,0.25), transparent 45%), radial-gradient(circle at 85% 80%, rgba(56,189,248,0.14), transparent 45%);"></div>
   <div class="relative max-w-7xl mx-auto px-6 md:px-10">
     <p class="text-glow tracking-[0.3em] text-xs uppercase mb-4">The Experience</p>
     <h2 class="font-display text-3xl md:text-5xl leading-tight mb-16 max-w-xl">A luxury buying journey, from Churchill Avenue to your front door.</h2>
@@ -352,7 +338,7 @@
 
 <!-- ============ CONCIERGE / CONTACT / FOOTER ============ -->
 <section id="contact" class="relative py-28 md:py-36 bg-sapphire text-white overflow-hidden">
-  <div class="absolute inset-0 opacity-50" style="background:radial-gradient(ellipse at 50% 0%, rgba(56,189,248,0.18), transparent 55%);"></div>
+  <div class="absolute inset-0 opacity-50 pointer-events-none" style="background:radial-gradient(ellipse at 50% 0%, rgba(56,189,248,0.18), transparent 55%);"></div>
   <div class="relative max-w-7xl mx-auto px-6 md:px-10">
     <div class="grid lg:grid-cols-2 gap-14">
       <div>
@@ -394,7 +380,7 @@
           </div>
           <div>
             <label class="text-xs uppercase tracking-widest text-platinum/50 block mb-2">Interested In</label>
-            <select class="w-full border-b border-white/20 focus:border-glow outline-none py-2.5 text-white bg-transparent transition-colors">
+            <select class="w-full border-b border-white/20 focus:border-glow outline-none py-2.5 text-white transition-colors">
               <option class="text-sapphire">Smart Televisions</option>
               <option class="text-sapphire">Advanced Refrigerators</option>
               <option class="text-sapphire">Washing Machines</option>
@@ -436,16 +422,27 @@ document.getElementById('year').textContent = new Date().getFullYear();
 const nav = document.getElementById('siteNav');
 window.addEventListener('scroll', () => {
   if (window.scrollY > 40) {
-    nav.classList.add('glass'); nav.style.setProperty('color','#0B192C');
+    nav.classList.add('glass');
+    nav.style.setProperty('color','#0B192C');
+    document.getElementById('navLogo').classList.remove('text-white');
+    document.getElementById('navLogo').classList.add('text-sapphire');
+    document.getElementById('menuBtn').classList.remove('text-white');
+    document.getElementById('menuBtn').classList.add('text-sapphire');
   } else {
-    nav.classList.remove('glass'); nav.style.removeProperty('color');
+    nav.classList.remove('glass');
+    nav.style.removeProperty('color');
+    document.getElementById('navLogo').classList.add('text-white');
+    document.getElementById('navLogo').classList.remove('text-sapphire');
+    document.getElementById('menuBtn').classList.add('text-white');
+    document.getElementById('menuBtn').classList.remove('text-sapphire');
   }
   document.getElementById('backToTop').classList.toggle('show', window.scrollY > 700);
 });
+
 const menuBtn = document.getElementById('menuBtn');
 const mobileMenu = document.getElementById('mobileMenu');
 menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+mobileMenu.querySelectorAll('.mobile-link').forEach(a => a.addEventListener('click', () => mobileMenu.classList.add('hidden')));
 document.getElementById('backToTop').addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
 
 /* ================= CUSTOM CURSOR GLOW ================= */
@@ -574,13 +571,7 @@ document.getElementById('inquiryForm').addEventListener('submit', function(e){
   this.reset();
 });
 
-/* =====================================================================
-   THREE.JS HERO — assembling metallic "signature" object
-   A faceted, low-poly appliance-silhouette core built from platinum
-   shard fragments that fly in and assemble on load, then idles with
-   slow rotation + cursor parallax tilt (echoes the exploded-view
-   product interaction used later on the page).
-===================================================================== */
+/* ================= THREE.JS HERO ================= */
 (function(){
   const wrap = document.getElementById('hero-canvas-wrap');
   const scene = new THREE.Scene();
@@ -594,7 +585,6 @@ document.getElementById('inquiryForm').addEventListener('submit', function(e){
   renderer.setSize(wrap.clientWidth, wrap.clientHeight);
   wrap.appendChild(renderer.domElement);
 
-  // Lighting
   const key = new THREE.PointLight(0x38BDF8, 3.2, 40);
   key.position.set(6, 6, 8);
   scene.add(key);
@@ -607,59 +597,43 @@ document.getElementById('inquiryForm').addEventListener('submit', function(e){
   const group = new THREE.Group();
   scene.add(group);
 
-  const platinumMat = new THREE.MeshStandardMaterial({ color:0xE2E8F0, metalness:0.92, roughness:0.22, envMapIntensity:1 });
+  const platinumMat = new THREE.MeshStandardMaterial({ color:0xE2E8F0, metalness:0.92, roughness:0.22 });
   const glowMat = new THREE.MeshBasicMaterial({ color:0x38BDF8 });
 
-  // Core: faceted icosahedron "screen/appliance" silhouette
   const coreGeo = new THREE.IcosahedronGeometry(2.6, 1);
   const core = new THREE.Mesh(coreGeo, platinumMat);
   group.add(core);
 
-  // Glowing edge wireframe
   const edges = new THREE.EdgesGeometry(coreGeo);
   const edgeLines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color:0x38BDF8, transparent:true, opacity:0.8 }));
   group.add(edgeLines);
 
-  // Fragment shards (exploded view -> assemble)
   const shardCount = 26;
   const shards = [];
   for (let i=0;i<shardCount;i++){
     const size = 0.28 + Math.random()*0.4;
-    const geo = Math.random() > 0.5
-      ? new THREE.TetrahedronGeometry(size)
-      : new THREE.OctahedronGeometry(size*0.8);
+    const geo = Math.random() > 0.5 ? new THREE.TetrahedronGeometry(size) : new THREE.OctahedronGeometry(size*0.8);
     const mat = Math.random() > 0.7 ? glowMat.clone() : platinumMat.clone();
-    if (mat.metalness !== undefined){ mat.roughness = 0.3; mat.metalness = 0.85; }
     const mesh = new THREE.Mesh(geo, mat);
 
-    const dir = new THREE.Vector3(
-      (Math.random()-0.5), (Math.random()-0.5), (Math.random()-0.5)
-    ).normalize();
+    const dir = new THREE.Vector3((Math.random()-0.5), (Math.random()-0.5), (Math.random()-0.5)).normalize();
     const finalRadius = 2.6 + Math.random()*0.6;
     const finalPos = dir.clone().multiplyScalar(finalRadius);
 
     mesh.position.copy(dir.clone().multiplyScalar(9 + Math.random()*6));
     mesh.userData.finalPos = finalPos;
     mesh.userData.rotSpeed = (Math.random()-0.5) * 0.02;
-    mesh.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
-
     group.add(mesh);
     shards.push(mesh);
   }
 
-  // Assemble animation
   shards.forEach((s, i) => {
     gsap.to(s.position, {
       x: s.userData.finalPos.x, y: s.userData.finalPos.y, z: s.userData.finalPos.z,
-      duration: 2.2 + Math.random()*0.8,
-      delay: 0.15 + i*0.035,
-      ease: 'power3.out'
+      duration: 2.2 + Math.random()*0.8, delay: 0.15 + i*0.035, ease: 'power3.out'
     });
   });
-  gsap.from(core.scale, { x:0.001,y:0.001,z:0.001, duration:1.6, delay:0.1, ease:'power3.out' });
-  gsap.from(edgeLines.material, { opacity:0, duration:1.8, delay:0.6 });
 
-  // Mouse parallax tilt
   let targetX = 0, targetY = 0;
   window.addEventListener('mousemove', (e) => {
     targetX = (e.clientX / window.innerWidth - 0.5) * 0.6;
@@ -680,15 +654,12 @@ document.getElementById('inquiryForm').addEventListener('submit', function(e){
     const t = clock.getElapsedTime();
 
     group.rotation.y += 0.0028;
-    group.rotation.y += (targetX - group.rotation.y*0) * 0; // no-op guard
     group.rotation.x += (targetY*0.6 - group.rotation.x) * 0.04;
-    group.rotation.y += (targetX*0.6 - (group.rotation.y % (Math.PI*2))) * 0.0; // keep spin autonomous
 
     core.rotation.y = t * 0.15;
     edgeLines.rotation.copy(core.rotation);
 
     shards.forEach(s => { s.rotation.x += s.userData.rotSpeed; s.rotation.y += s.userData.rotSpeed*1.3; });
-
     key.position.x = Math.sin(t*0.3)*7 + 2;
 
     renderer.render(scene, camera);
